@@ -24,8 +24,6 @@ or add it into ~/.bashrc or ~/.bash_profile
 
 # Usage
 
-Examples)
-
 1. Lastz alignment
 
          lastz reference.fa assembly.fa[multiple] --format=general --ambiguous=iupac --step=10000 > output.lastz
