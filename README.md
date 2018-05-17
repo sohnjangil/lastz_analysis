@@ -6,6 +6,7 @@ We recommand lastz_32 for large genomes (1>Gbp genome size).
 
 # Requirement
 g++ compiler with c++11 (or higher)
+
 lastz (https://github.com/lastz/lastz.git)
 
 
