@@ -24,61 +24,72 @@ or add it into ~/.bashrc or ~/.bash_profile
 
 # Usage
 
+Examples)
+
 1. Lastz alignment
 
-         lastz reference.fa assembly.fa[multiple] --format=general --ambiguous=iupac --step=10000 > assembly.fasta.lastz
+         lastz reference.fa assembly.fa[multiple] --format=general --ambiguous=iupac --step=10000 > output.lastz
 
-If needed, modify step option.
+If needed, modify --step option, but do not change the option "--format=general".
+Note that we do not recommand options "--gapped" or "--chain".
 
 2. Using lastz_analysis
 
-         lastz_analysis -i assembly.fasta.lastz [options]
+         lastz_analysis -i output.lastz [options]
 
 3. Plot
 
-         lastz2gnuplot result.lastz [ reference_scaffold_name [ assembly_scaffold_name ] ] > output
+         lastz2gnuplot output.lastz [ reference_scaffold_name [ assembly_scaffold_name ] ] > output
 
-The output file can be used for gnuplot or R or any other plot tools.
+If you want noise-filtered one,
+
+         lastz2gnuplot output.lastz.filterd chr1 > chr1.plot
+
+If you want generate a plot file of contig_1 to chr1, do
+         
+         lastz2gnuplot output.lastz.filterd chr1 contig_1 > chr1.contig_1.plot
+         
+The output file(s) can be used in gnuplot or R or any other plot tools.
 
 # Result files
 
 Nise filtered result
 
-         assembly.fasta.lastz.filter
+         (prefix).filter
 
 Default cut-offs are -d 0.985 -l 4000 for noise filtration.
 
 
 Filtered-out result
 
-         noise
+         (prefix).noise
 
 A summary file with basic statistics of structural variations and options used
 
-         summary: 
+         (prefix).summary
 
 
 Structural variation files:
 
-         delet:   Deletion.
+         (prefix).delet   (Deletion)
 
-         dupli:   Duplication.
+         (prefix).dupli   (Duplication)
 
-         reduc:   Duplication in reference compared with assembly.
+         (prefix).reduc   (Duplication in reference compared with assembly)
 
-         insrt:   Insertion.
+         (prefix).insrt   (Insertion)
 
-         invrs:   Inversion.
+         (prefix).invrs   (Inversion)
 
-         trans:   Inter-chromosomal translocation.
+         (prefix).trans   (Inter-chromosomal translocation)
 
-         reloc:   Intra-chromosomal translocation.
+         (prefix).reloc   (Intra-chromosomal translocation)
 
 Mapping informations
 
-         map2target: Statistics of mapping status.
+         (prefix).map2target  (Statistics of mapping status)
 
-         strand: Strand of assembly scaffold compared with refence.
+         (prefix).strand      (Strand of assembly scaffold compared with refence)
 
 Strands are calculated in mainly mapped reference scaffold (or chromosome)
 
