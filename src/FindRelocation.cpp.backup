@@ -1,0 +1,148 @@
+string FindRelocation () {
+
+  long LENG  = 0 ;
+  long count = 0 ;
+  
+  map < long , vector < string > > LIST;  // list of relocation
+  
+  // Finding intra-chromosomal translocation (relocation)
+  // QTmap [Q id] [T id] = vector < LGF >
+  map < string , map < string , vector < LGF > > > QTmap ;
+  //  map < string , map < string , size_t > > QTmap_size ;
+
+  // for ( map < string , map < long , vector < LGF > > > :: iterator it = QT.begin() ; it != QT.end() ; it ++ ){
+  //   for ( map < long , vector < LGF > > :: iterator jt = it->second.begin() ; jt != it->second.end() ; jt ++ ){
+  //     for ( vector < LGF > :: iterator kt = jt->second.begin() ; kt != jt->second.end() ; kt ++ ){
+  // 	QTmap_size[it->first][jt->first] ++ ;
+  //     }
+  //   }
+  // }
+
+  // for ( map < string , map < string , size_t > > :: iterator it = QTmap_size.begin() ; it != QTmap_size.end() ; it ++ ){
+  //   for ( map < string , size_t > :: iterator jt = it->second.begin() ; jt != it->second.end() ; jt ++ ){
+  //     QTmap[it->first][]
+  //   }
+  // }
+  
+  // for ( map < string , map < long , vector < LGF > > > :: iterator it = QT.begin() ; it != QT.end() ; it ++ ){
+  //   for ( map < long , vector < LGF > > :: iterator jt = it->second.begin() ; jt != it->second.end() ; jt ++ ){
+  //     QTmap_size[it->first][jt->first]
+  //   }
+  // }
+  for ( map < string , map < long , vector < LGF > > > :: iterator it = QT.begin() ; it != QT.end() ; it ++ ){
+    for ( map < long , vector < LGF > > :: iterator jt = it->second.begin() ; jt != it->second.end() ; jt ++ ){
+
+      for ( vector < LGF > :: iterator kt = jt->second.begin() ; kt != jt->second.end() ; kt ++ ){
+	QTmap[it->first][kt->TargetName()].push_back(*kt) ;
+      }
+    }
+  }
+
+
+  string tmp ;
+  
+  for ( map < string , map < string , vector < LGF > > > :: iterator it = QTmap.begin() ; it != QTmap.end() ; it ++ ){
+    for ( map < string , vector < LGF > > :: iterator jt = it->second.begin() ; jt != it->second.end() ; jt ++ ){
+
+      vector < LGF > LV = jt->second ;
+      
+      // flip positions, if the strand is "-"
+      // These steps are needed to filtering inversions.
+      for ( size_t k = 0 ; k != LV.size() ; k ++ ){
+	if ( LV[k].QueryStart() > LV[k].QueryEnd() ){
+	  swap ( LV[k].zstart2, LV[k].end2 ) ;
+	}
+	if ( LV[k].TargetStart() > LV[k].TargetEnd() ){
+	  swap ( LV[k].zstart1 , LV[k].end1 ) ;
+	}
+      }
+
+      // sort by Query start positions.
+      sort ( LV.begin() , LV.end() , CompQStart );
+
+      
+      // find relocation (intra-chr. translocation), by detecting scewed order of Target Start
+      long Tstart;
+      long Qstart;
+
+      long Tend = -1 ;
+      long Qend = -1 ;
+
+      long Tlength;
+      long Qlength;
+
+      long flag;
+   
+      for ( size_t k = 1 ; k < LV.size() ; k ++ ){
+	if ( LV[k-1].TargetStart() > LV[k].TargetStart() ){
+	  flag = LV[k-1].TargetStart();
+
+	  Tstart = LV[k].TargetStart();
+	  Qstart = LV[k].QueryStart();
+	  
+	  do{
+	    if ( LV[k].TargetStart() > flag ) {
+	      Tend = LV[k-1].TargetEnd();
+	      Qend = LV[k-1].QueryEnd();
+	      Tlength = Tend - Tstart;
+	      Qlength = Qend - Qstart;
+	      break;
+	    }
+	    k ++ ;
+	  } while ( k < LV.size() ); 
+
+
+	  ///////////////////////////////////
+	  
+	  if ( Tend > 0 && Tlength >= window_size) {
+	    LENG += Tlength;
+	    tmp
+	      = jt->first + "\t"
+	      + to_string(Tstart) + "\t"
+	      + to_string(Tend) + "\t"
+	      + to_string(Tlength) + "\t"
+	      + it->first + "\t"
+	      + to_string(Qstart) + "\t"
+	      + to_string(Qend) + "\t"
+	      + to_string(Qlength) ;
+	    LIST[Tlength].push_back(tmp);
+	  }
+	  /*	  
+	  Reloc
+	    +=to_string(id) + "\t"
+	    + "Reloc\t"
+	    + jt->first + "\t"
+	    + to_string(Tstart) + "\t"
+	    + to_string(Tend) + "\t"
+	    + to_string(Tlength) + "\t"
+	    + it->first + "\t"
+	    + to_string(Qstart) + "\t"
+	    + to_string(Qend) + "\t"
+	    + to_string(Qlength) + "\n" ;
+	  */
+	}
+      }
+    }
+  }
+
+
+  string outfile = prefix + ".reloc" ;
+  ofstream Reloc(outfile.c_str());
+
+
+  Reloc << FIRST_LINE << endl ;
+
+  for ( map < long , vector < string > > :: reverse_iterator list_it = LIST.rbegin(); list_it != LIST.rend() ; list_it ++ ){
+    for ( vector < string > :: iterator list_jt = list_it->second.begin() ; list_jt != list_it->second.end() ; list_jt ++ ){
+      Reloc << ++ count << "\tRELOC\t" << * list_jt << endl ;
+    }
+  }
+     
+  Reloc.close();
+	  
+  return to_string(count) + "\t" + to_string(LENG) ;
+  
+}
+
+
+
