@@ -1,5 +1,5 @@
 # lastz_analysis
-A tool for analyzing lastz alignment result generated using "--format=general" option to find structural variations or to perform super-scaffolding guided by reference genome
+This is a tool for analyzing lastz alignment result generated using "--format=general" option to find structural variations or to perform super-scaffolding guided by reference genome.
 
 We recommand lastz_32 for large genomes (1>Gbp genome size).
 
@@ -26,17 +26,17 @@ or add it into ~/.bashrc or ~/.bash_profile
 
 1. Lastz alignment
 
-$ lastz reference.fa assembly.fa[multiple] --format=general --ambiguous=iupac --step=10000 > assembly.fasta.lastz
+         $ lastz reference.fa assembly.fa[multiple] --format=general --ambiguous=iupac --step=10000 > assembly.fasta.lastz
 
 If needed, modify step option.
 
 2. Using lastz_analysis
 
-$ lastz_analysis -i assembly.fasta.lastz [options]
+         $ lastz_analysis -i assembly.fasta.lastz [options]
 
 3. Plot
 
-$ lastz2gnuplot result.lastz [ reference_scaffold_name [ assembly_scaffold_name ] ] > output
+         $ lastz2gnuplot result.lastz [ reference_scaffold_name [ assembly_scaffold_name ] ] > output
 
 The output file can be used for gnuplot or R or any other plot tools.
 
@@ -44,22 +44,17 @@ The output file can be used for gnuplot or R or any other plot tools.
 
 filter:  Noise filtered result.
 
-         Default cut-offs are
+Default cut-offs are -d 0.985 -l 4000 for noise filtration.
 
-                 -d 0.985
+The cut-offs can be modified in using lastz_analysis.
 
-                 -l 4000
 
-         for noise filtration.
-
-         The cut-offs can be modified in using lastz_analysis.
 
 noise:   Filtered result by noise filtration.
 
 
 summary: A summary file of lastz_analysis.
-
-         This contains basic statistics of structural variations and options used.
+This contains basic statistics of structural variations and options used.
 
 Structural variation files:
 
@@ -79,11 +74,11 @@ reloc:   Intra-chromosomal translocation.
 
 Mapping informations:
 
-map2target:     Statistics of mapping status.
+map2target: Statistics of mapping status.
 
-strand:         Strand of assembly scaffold compared with refence.
+strand: Strand of assembly scaffold compared with refence.
 
-                Strands are calculated in mainly mapped reference scaffold (or chromosome)
+Strands are calculated in mainly mapped reference scaffold (or chromosome)
 
 # Contact to
 
