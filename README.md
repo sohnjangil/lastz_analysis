@@ -13,11 +13,11 @@ lastz (https://github.com/lastz/lastz.git)
 # Installation
 Just do
 
-$ make
+         make
 
 After compiling, set PATH
 
-$ export PATH=/path-to-here/bin:$PATH
+         export PATH=/path-to-here/bin:$PATH
 
 or add it into ~/.bashrc or ~/.bash_profile
 
@@ -26,57 +26,59 @@ or add it into ~/.bashrc or ~/.bash_profile
 
 1. Lastz alignment
 
-         $ lastz reference.fa assembly.fa[multiple] --format=general --ambiguous=iupac --step=10000 > assembly.fasta.lastz
+         lastz reference.fa assembly.fa[multiple] --format=general --ambiguous=iupac --step=10000 > assembly.fasta.lastz
 
 If needed, modify step option.
 
 2. Using lastz_analysis
 
-         $ lastz_analysis -i assembly.fasta.lastz [options]
+         lastz_analysis -i assembly.fasta.lastz [options]
 
 3. Plot
 
-         $ lastz2gnuplot result.lastz [ reference_scaffold_name [ assembly_scaffold_name ] ] > output
+         lastz2gnuplot result.lastz [ reference_scaffold_name [ assembly_scaffold_name ] ] > output
 
 The output file can be used for gnuplot or R or any other plot tools.
 
 # Result files
 
-filter:  Noise filtered result.
+Nise filtered result
+
+         assembly.fasta.lastz.filter
 
 Default cut-offs are -d 0.985 -l 4000 for noise filtration.
 
-The cut-offs can be modified in using lastz_analysis.
 
+Filtered-out result
 
+         noise
 
-noise:   Filtered result by noise filtration.
+A summary file with basic statistics of structural variations and options used
 
+         summary: 
 
-summary: A summary file of lastz_analysis.
-This contains basic statistics of structural variations and options used.
 
 Structural variation files:
 
-delet:   Deletion.
+         delet:   Deletion.
 
-dupli:   Duplication.
+         dupli:   Duplication.
 
-reduc:   Duplication in reference compared with assembly.
+         reduc:   Duplication in reference compared with assembly.
 
-insrt:   Insertion.
+         insrt:   Insertion.
 
-invrs:   Inversion.
+         invrs:   Inversion.
 
-trans:   Inter-chromosomal translocation.
+         trans:   Inter-chromosomal translocation.
 
-reloc:   Intra-chromosomal translocation.
+         reloc:   Intra-chromosomal translocation.
 
-Mapping informations:
+Mapping informations
 
-map2target: Statistics of mapping status.
+         map2target: Statistics of mapping status.
 
-strand: Strand of assembly scaffold compared with refence.
+         strand: Strand of assembly scaffold compared with refence.
 
 Strands are calculated in mainly mapped reference scaffold (or chromosome)
 
